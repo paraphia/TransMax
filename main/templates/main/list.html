@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="{% static 'css/styles.css'%}">
+	<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<a href="{% url 'main:index' %}">Главная</a>
+			<a href="{% url 'main:list' %}">Список продуктов</a>		
+		</div>
+		<div class="dld">
+				<div class="download">
+					<a href="{% static 'excell/data.xlsx'%}">Скачать отчет <i class="fa fa-download" aria-hidden="true"></i></a>
+				</div>
+		</div>
+		<div class="table">
+			<div class="table_header">
+				<div class="table_header_item">Продукт</div>
+				<div class="table_header_item">Продажи</div>
+				<div class="table_header_item">Цена</div>
+				<div class="table_header_item">Доход</div>
+			</div>
+			<div class="table_items">
+				{% for prod in products_list %}
+					<div class="table_item">
+						<div class="column"><a href="{% url 'main:product' prod.id %}">{{ prod.name }}</a> </div>
+						<div class="column">{{ prod.count }}</div>
+						<div class="column">{{ prod.price }}</div>
+						<div class="column">{{ prod.income }}</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

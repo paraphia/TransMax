@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Графики с использованием chart.js</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css'%}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="{% url 'main:index' %}">Главная</a>
+            <a href="{% url 'main:list' %}">Список продуктов</a>        
+        </div>
+        <center><h1>Статистика дохода</h1></center>
+        <div class="table c3">
+            <div class="table_header">
+                <div class="table_header_item">Дата обновления статистики</div>
+                <div class="table_header_item">Общее кол.во продаж</div>
+                <div class="table_header_item">Общий доход</div>
+            </div>
+            <div class="table_items">
+                {% for total in totals %}
+                    <div class="table_item">
+                        <div class="column date">{{ total.date }}</div>
+                        <div class="column">{{ total.sales }}</div>
+                        <div class="column">{{ total.bill }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="table_items">
+                    <div class="table_item">
+                        <div class="column"></div>
+                        <div class="column"></div>
+                        <div class="column total_result">Рост +{{ difference }}</div>
+                    </div>
+            </div>
+        </div>
+        <center><h1>Изменения в продожах</h1></center>
+        <div class="table">
+            <div class="table_header">
+                <div class="table_header_item">Продукт</div>
+                <div class="table_header_item">Продажи</div>
+                <div class="table_header_item">Цена</div>
+                <div class="table_header_item">Доход</div>
+            </div>
+            <div class="table_items">
+                {% for prod in changes %}
+                    <div class="table_item">
+                        <div class="column"><a href="{% url 'main:product' prod.archive_parent.id %}">{{ prod.archive_parent.name }}</a></div>
+                        <div class="column">{{ prod.archive_count }} <sup><span>(+{{ prod.archive_increase }})</span></sup></div>
+                        <div class="column">{{ prod.archive_bill }}</div>
+                        <div class="column">{{ prod.archive_income }} <sup><span>(+{{ prod.archive_income_increase }})</span></sup></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+<script>
+    result = document.querySelector('.total_result')
+    dates = document.querySelectorAll('.date')
+    date_1 = dates[0]
+    date_2 = dates[dates.length - 1]
+    text = "Рост прибыли от "+date_2.innerHTML+" до "+date_1.innerHTML+": <span>+"+{{ difference }}+"$</span>"
+    result.innerHTML = text
+</script>
+<script>
+    // Получение ссылки на элемент canvas в DOM
+    const $grafica = document.querySelector("#grafica");
+    // Tags - это метки, которые идут по оси X.  
+    const tags = {{ days|safe }};
+    // У нас может быть несколько наборов данных. Давайте начнем с одного
+    const dataSales2020 = {
+        label: "Статистика дохода",
+        data: [648366, 548378, 348458], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
+        backgroundColor: 'transparent', // Цвет фона
+        borderColor: 'rgba(54, 162, 235, 1)', // Цвет границ
+        borderWidth: 1,// Толщина границ
+    };
+    const dataSales2021 = {
+        label: "Продажи за lty,",
+        data: [3000, 3000, 6854, 1354], // Данные представляют собой массив, который должен иметь такое же количество значений, как и количество тегов.
+        backgroundColor: 'rgba(54, 162, 235, 0.2)', // Цвет фона
+        borderColor: 'rgba(0, 0, 0, 1)', // Цвет границ
+        borderWidth: 1,// Толщина границ
+    };
+    new Chart($grafica, {
+        type: 'line',// Тип графики
+        data: {
+            labels: tags,
+            datasets: [
+                dataSales2020,
+            ]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }],
+            },
+        }
+    });
+</script>
+</body>
+
+</html>

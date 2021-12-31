@@ -1,0 +1,1 @@
+web: gunicorn transmax.wsgi --log-file -

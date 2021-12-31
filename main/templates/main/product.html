@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css'%}">
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<a href="{% url 'main:index' %}">Главная</a>
+			<a href="{% url 'main:list' %}">Список продуктов</a>		
+		</div>
+		<div class="table">
+            <div class="table_header">
+                <div class="table_header_item">Продукт</div>
+                <div class="table_header_item">Продажи</div>
+                <div class="table_header_item">Цена</div>
+                <div class="table_header_item">Доход</div>
+            </div>
+            <div class="table_items">
+                {% for prod in product_changes %}
+                    <div class="table_item">
+                        <div class="column">{{ prod.archive_parent.name }}</div>
+                        <div class="column">{{ prod.archive_count }} <sup><span>(+{{ prod.archive_increase }})</span></sup></div>
+                        <div class="column">{{ prod.archive_bill }}</div>
+                        <div class="column">{{ prod.archive_income }}</div>
+                    </div>
+                    {% empty %}
+                    <div class="table_item">
+                        <div class="column">{{ product.name  }}</div>
+                        <div class="column">{{ product.count }}</div>
+                        <div class="column">{{ product.price }}</div>
+                        <div class="column">{{ product.income}}</div>
+                    </div>
+                    <div style="padding: 30px 0px;"><center><b>Именений в продаже не обнаружено.</b></center></div>
+                {% endfor %}
+            </div>
+        </div>
+	</div>
+</body>
+</html>
